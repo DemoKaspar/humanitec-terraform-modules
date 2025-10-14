@@ -8,6 +8,10 @@ terraform {
       source  = "hashicorp/tls"
       version = "~> 4.0"
     }
+    terraform = {
+      source  = "terraform.io/builtin/terraform"
+      version = "~> 1.0"
+    }
   }
 }
 
@@ -158,7 +162,7 @@ resource "aws_autoscaling_group" "vm_fleet" {
 
 # Application Load Balancer
 resource "aws_lb" "vm_fleet" {
-  name               = "${substr(var.app_id, 0, 8)}-${var.env_id}"
+  name               = "vm-${substr(var.app_id, 0, 6)}-${var.env_id}"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb.id]
