@@ -20,10 +20,12 @@ variable "startup_script" {
 
 variable "app_id" {
   type        = string
+  default     = "todo-app"
   description = "Application ID for tagging"
 }
 
 variable "env_id" {
   type        = string
+  default     = "dev"
   description = "Environment ID for tagging"
 }
