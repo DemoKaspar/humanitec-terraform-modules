@@ -8,6 +8,9 @@ terraform {
       source  = "hashicorp/tls"
       version = "~> 4.0"
     }
+    terraform = {
+      source = "terraform.io/builtin/terraform"
+    }
   }
 }
 
