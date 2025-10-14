@@ -8,10 +8,6 @@ terraform {
       source  = "hashicorp/tls"
       version = "~> 4.0"
     }
-    terraform = {
-      source  = "hashicorp/terraform"
-      version = "~> 1.0"
-    }
   }
 }
 
