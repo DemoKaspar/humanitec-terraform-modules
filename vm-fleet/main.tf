@@ -9,7 +9,7 @@ terraform {
       version = "~> 4.0"
     }
     terraform = {
-      source  = "terraform.io/builtin/terraform"
+      source  = "hashicorp/terraform"
       version = "~> 1.0"
     }
   }
