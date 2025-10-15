@@ -29,3 +29,15 @@ variable "env_id" {
   default     = "dev"
   description = "Environment ID for tagging"
 }
+
+variable "container_image" {
+  description = "Container image to deploy"
+  type        = string
+  default     = "ghcr.io/demokaspar/fresh-todo-app:latest"
+}
+
+variable "container_port" {
+  description = "Port the container listens on"
+  type        = number
+  default     = 3000
+}

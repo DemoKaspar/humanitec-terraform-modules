@@ -123,7 +123,12 @@ resource "aws_launch_template" "vm_fleet" {
 
   vpc_security_group_ids = [aws_security_group.vm_fleet.id]
 
-  user_data = base64encode(var.startup_script)
+  user_data = base64encode(templatefile("${path.module}/startup-script.tpl", {
+    container_image = var.container_image
+    container_port  = var.container_port
+    app_id         = var.app_id
+    env_id         = var.env_id
+  }))
 
   tag_specifications {
     resource_type = "instance"
