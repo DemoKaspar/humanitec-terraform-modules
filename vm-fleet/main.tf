@@ -135,75 +135,31 @@ resource "aws_launch_template" "vm_fleet" {
     
     # Log everything
     exec > >(tee /var/log/user-data.log) 2>&1
-    echo "=== Todo App VM Setup Started at $(date) ==="
+    echo "=== VM Setup Started at $(date) ==="
     
     # Update system
     apt-get update -y
-    apt-get install -y curl git
+    apt-get upgrade -y
     
-    # Install Node.js 18
-    curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
-    apt-get install -y nodejs
+    # Install Docker
+    curl -fsSL https://get.docker.com -o get-docker.sh
+    sh get-docker.sh
     
-    # Verify installation
-    node --version
-    npm --version
+    # Install Docker Compose
+    curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    chmod +x /usr/local/bin/docker-compose
     
-    # Create app user and directory
-    useradd -m -s /bin/bash todoapp
-    mkdir -p /home/todoapp/app
+    # Create docker group and add ubuntu user
+    usermod -aG docker ubuntu
     
-    # Clone the fresh todo app
-    cd /home/todoapp
-    git clone https://github.com/DemoKaspar/fresh-todo-app.git app
-    cd app
+    # Install Python for Ansible
+    apt-get install -y python3 python3-pip
     
-    # Install dependencies
-    npm install --production
+    # Start and enable Docker
+    systemctl start docker
+    systemctl enable docker
     
-    # Set ownership
-    chown -R todoapp:todoapp /home/todoapp
-    
-    # Create systemd service
-    cat > /etc/systemd/system/todoapp.service << 'EOL'
-    [Unit]
-    Description=Todo App
-    After=network.target
-    
-    [Service]
-    Type=simple
-    User=todoapp
-    WorkingDirectory=/home/todoapp/app
-    ExecStart=/usr/bin/node server.js
-    Restart=always
-    RestartSec=10
-    Environment=PORT=3000
-    Environment=NODE_ENV=production
-    
-    [Install]
-    WantedBy=multi-user.target
-    EOL
-    
-    # Start service
-    systemctl daemon-reload
-    systemctl enable todoapp
-    systemctl start todoapp
-    
-    # Verify it's running
-    sleep 5
-    systemctl status todoapp
-    
-    # Test health endpoint
-    for i in {1..20}; do
-        if curl -f http://localhost:3000/health; then
-            echo "=== Todo App is healthy! ==="
-            break
-        fi
-        echo "Waiting for app to start... ($i/20)"
-        sleep 3
-    done
-    
-    echo "=== Setup completed at $(date) ==="
+    echo "=== VM Setup completed at $(date) - Ready for container deployment ==="
   EOF
   )
 
