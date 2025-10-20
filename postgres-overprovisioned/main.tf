@@ -101,7 +101,7 @@ resource "aws_db_instance" "postgres" {
 
   # Performance and monitoring - OVERPROVISIONED
   performance_insights_enabled = true  # OVERPROVISIONED - enabled
-  monitoring_interval         = 60     # OVERPROVISIONED - detailed monitoring
+  monitoring_interval         = 0      # Disabled to avoid IAM role requirement
 
   # Deletion protection (disabled for dev environments)
   deletion_protection = false
