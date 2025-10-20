@@ -75,7 +75,7 @@ resource "aws_db_instance" "postgres" {
 
   # Engine configuration
   engine         = "postgres"
-  engine_version = "15.4"
+  engine_version = "15.8"
   instance_class = "db.t3.small"  # OVERPROVISIONED - larger than needed
 
   # Database configuration
